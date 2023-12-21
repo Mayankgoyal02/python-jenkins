@@ -4,10 +4,15 @@ import requests
 blazemeter_api_key = 'dd24e562a1c804ac55446bbd'
 
 # BlazeMeter API endpoint for getting information about your account
-blazemeter_api_url = f'https://a.blazemeter.com/api/latest/accounts?api_key={blazemeter_api_key}'
+blazemeter_api_url = 'https://a.blazemeter.com/api/latest/accounts'
 
-# Make a GET request to the BlazeMeter API
-response = requests.get(blazemeter_api_url)
+# Set up the headers with the BlazeMeter API key
+headers = {
+    'Authorization': blazemeter_api_key,
+}
+
+# Make a GET request to the BlazeMeter API with headers
+response = requests.get(blazemeter_api_url, headers=headers)
 
 # Check the response status
 if response.status_code == 200:
