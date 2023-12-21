@@ -1,5 +1,3 @@
-pip install requests
-
 import requests
 
 # Replace 'your_blazemeter_api_key' with your actual BlazeMeter API key
