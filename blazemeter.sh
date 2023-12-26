@@ -22,4 +22,9 @@ curl -sk "$FILES_URL" \
 curl -sk "$FILES_URL" \
     -X POST \
     -F "file=@$DATA_CSV" \
-    --user "$USERNAME:$API_KEY"         
+    --user "$USERNAME:$API_KEY"     
+
+# curl -sk "$RUN_TEST_URL" \
+#     -X POST \
+#     -H 'Content-Type: application/json' \
+#     --user "$USERNAME:$API_KEY"    
