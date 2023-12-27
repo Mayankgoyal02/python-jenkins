@@ -42,7 +42,7 @@ curl -sk "$FILES_URL" \
  --user "$USERNAME:$API_KEY"
  
 # Uncomment the following lines if you want to run the test immediately after uploading files
-# curl -sk "$RUN_TEST_URL" \
-#  -X POST \
-#  -H 'Content-Type: application/json' \
-#  --user "$USERNAME:$API_KEY"
+curl -sk "$RUN_TEST_URL" \
+-X POST \
+-H 'Content-Type: application/json' \
+--user "$USERNAME:$API_KEY"
