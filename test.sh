@@ -14,9 +14,9 @@ if [ -z "${FILE_JMX}" ] || [ -z "${FILE_USER_CSV}" ] || [ -z "${FILE_DATA_CSV}" 
  exit 1
 fi
  
-JMX_FILE="${FILE_JMX}"
-USER_CSV="${FILE_USER_CSV}"
-DATA_CSV="${FILE_DATA_CSV}"
+JMX_FILE="performancetesting.jmx"
+USER_CSV="user.csv"
+DATA_CSV="data.csv"
  
 FILES_URL="https://a.blazemeter.com/api/v4/tests/${TEST_ID}/files"
 RUN_TEST_URL="https://a.blazemeter.com/api/v4/tests/${TEST_ID}/start"
