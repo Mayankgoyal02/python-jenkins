@@ -67,9 +67,9 @@ TEST_ID="${BLAZEMETER_TEST_ID}"
 #  exit 1
 # fi
  
-JMX_FILE="${performancetesting.jmx}"
-USER_CSV="${user.csv}"
-DATA_CSV="${data.csv}"
+JMX_FILE='performancetesting.jmx'
+USER_CSV='user.csv'
+DATA_CSV='data.csv'
  
 FILES_URL="https://a.blazemeter.com/api/v4/tests/${TEST_ID}/files"
 RUN_TEST_URL="https://a.blazemeter.com/api/v4/tests/${TEST_ID}/start"
