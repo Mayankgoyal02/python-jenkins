@@ -8,9 +8,16 @@ fi
  
 TEST_ID="${BLAZEMETER_TEST_ID}"
  
-JMX_FILE='performancetesting.jmx'
-USER_CSV='user.csv'
-DATA_CSV='data.csv'
+# Check if FILE_JMX, FILE_USER_CSV, and FILE_DATA_CSV are provided as environment variables
+if [ -z "${FILE_JMX}" ] || [ -z "${FILE_USER_CSV}" ] || [ -z "${FILE_DATA_CSV}" ]; then
+ echo "Error: FILE_JMX, FILE_USER_CSV, or FILE_DATA_CSV environment variables are not set."
+ exit 1
+fi
+ 
+JMX_FILE="${FILE_JMX}"
+USER_CSV="${FILE_USER_CSV}"
+DATA_CSV="${FILE_DATA_CSV}"
+ 
 FILES_URL="https://a.blazemeter.com/api/v4/tests/${TEST_ID}/files"
 RUN_TEST_URL="https://a.blazemeter.com/api/v4/tests/${TEST_ID}/start"
 USERNAME='ebf4a8d99d54eb292bcad9ce'
@@ -22,11 +29,13 @@ curl -sk "$FILES_URL" \
  -F "file=@$JMX_FILE" \
  --user "$USERNAME:$API_KEY"
  
+# Upload the user CSV file
 curl -sk "$FILES_URL" \
  -X POST \
  -F "file=@$USER_CSV" \
  --user "$USERNAME:$API_KEY"
  
+# Upload the data CSV file
 curl -sk "$FILES_URL" \
  -X POST \
  -F "file=@$DATA_CSV" \
