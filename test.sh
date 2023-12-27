@@ -47,5 +47,5 @@ curl -sk "$RUN_TEST_URL" \
 -H 'Content-Type: application/json' \
 --user "$USERNAME:$API_KEY"
 
-curl -sk 'https://a.blazemeter.com/api/v4/masters?testId=${TEST_ID}' \
+curl -sk "https://a.blazemeter.com/api/v4/masters?testId=${TEST_ID}" \
     --user "$USERNAME:$API_KEY"
