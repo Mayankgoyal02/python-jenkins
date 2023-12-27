@@ -46,3 +46,5 @@ curl -sk "$RUN_TEST_URL" \
 -X POST \
 -H 'Content-Type: application/json' \
 --user "$USERNAME:$API_KEY"
+
+xdg-open "https://a.blazemeter.com/app/tests/$TEST_ID"
