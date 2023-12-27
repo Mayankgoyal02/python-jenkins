@@ -9,10 +9,10 @@ fi
 TEST_ID="${BLAZEMETER_TEST_ID}"
  
 # Check if FILE_JMX, FILE_USER_CSV, and FILE_DATA_CSV are provided as environment variables
-if [ -z "${FILE_JMX}" ] || [ -z "${FILE_USER_CSV}" ] || [ -z "${FILE_DATA_CSV}" ]; then
- echo "Error: FILE_JMX, FILE_USER_CSV, or FILE_DATA_CSV environment variables are not set."
- exit 1
-fi
+# if [ -z "${FILE_JMX}" ] || [ -z "${FILE_USER_CSV}" ] || [ -z "${FILE_DATA_CSV}" ]; then
+#  echo "Error: FILE_JMX, FILE_USER_CSV, or FILE_DATA_CSV environment variables are not set."
+#  exit 1
+# fi
  
 JMX_FILE="performancetesting.jmx"
 USER_CSV="user.csv"
