@@ -9,6 +9,7 @@ fi
 #!/bin/bash
 
 TEST_ID='13758845'
+BRANCH = "$Branch"
 
 # GitHub repository details
 GITHUB_REPO='https://github.com/Mayankgoyal02/python-jenkins'
