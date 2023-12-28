@@ -1,17 +1,17 @@
 #!/bin/bash
- 
-# Check if BRANCH is provided as a command-line argument
-if [ "$#" -lt 1 ]; then
-  echo "Usage: $0 <BRANCH>"
+
+# Check if BRANCH_NAME is provided by Jenkins
+if [ -z "$BRANCH_NAME" ]; then
+  echo "BRANCH_NAME not provided by Jenkins. Please select a branch."
   exit 1
 fi
- 
-BRANCH="$1"
+
+BRANCH="$BRANCH_NAME"
 TEST_ID='13758845'
  
 # GitHub repository details
 GITHUB_REPO="https://github.com/Mayankgoyal02/python-jenkins"
-RAW_BASE_URL="https://raw.githubusercontent.com/Mayankgoyal02/python-jenkins/${BRANCH}/"
+RAW_BASE_URL="${GITHUB_REPO}/${BRANCH}/"
  
 # BlazeMeter API details
 FILES_URL="https://a.blazemeter.com/api/v4/tests/${TEST_ID}/files"
