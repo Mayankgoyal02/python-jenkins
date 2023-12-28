@@ -68,8 +68,8 @@ USERNAME='ebf4a8d99d54eb292bcad9ce'
 API_KEY='8be234d747e4d099e67040d248764c3a9d747b1c6df4c5003b813b8403b5e6c6e511ae77'
 
 # Redirect the output to a log file
-log_file="/path/to/your/log/file.log"
-exec > >(tee -a "${log_file}") 2>&1
+# log_file="/path/to/your/log/file.log"
+# exec > >(tee -a "${log_file}") 2>&1
 
 # Debugging output
 echo "Current working directory: $(pwd)"
