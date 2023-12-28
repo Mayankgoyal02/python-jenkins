@@ -8,7 +8,7 @@ fi
 
 BRANCH="${Branch}"
 TEST_ID='13758845'
-echo $Branch 
+echo $BRANCH 
 # GitHub repository details
 GITHUB_REPO="https://github.com/Mayankgoyal02/python-jenkins"
 RAW_BASE_URL="${GITHUB_REPO}/${Branch}/"
