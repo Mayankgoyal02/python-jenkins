@@ -11,7 +11,7 @@ TEST_ID='13758845'
 echo $BRANCH 
 # GitHub repository details
 GITHUB_REPO="https://github.com/Mayankgoyal02/python-jenkins"
-RAW_BASE_URL="${GITHUB_REPO}/$Branch/"
+RAW_BASE_URL="https://raw.githubusercontent.com/Mayankgoyal02/python-jenkins/$Branch/"
  
 # BlazeMeter API details
 FILES_URL="https://a.blazemeter.com/api/v4/tests/${TEST_ID}/files"
