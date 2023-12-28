@@ -11,7 +11,7 @@ TEST_ID='13758845'
 echo $BRANCH 
 # GitHub repository details
 GITHUB_REPO="https://github.com/Mayankgoyal02/python-jenkins"
-RAW_BASE_URL="https://raw.githubusercontent.com/Mayankgoyal02/python-jenkins/$Branch/"
+RAW_BASE_URL="https://raw.githubusercontent.com/Mayankgoyal02/python-jenkins/${Branch}/"
  
 # BlazeMeter API details
 FILES_URL="https://a.blazemeter.com/api/v4/tests/${TEST_ID}/files"
@@ -20,7 +20,7 @@ USERNAME='ebf4a8d99d54eb292bcad9ce'
 API_KEY='8be234d747e4d099e67040d248764c3a9d747b1c6df4c5003b813b8403b5e6c6e511ae77'
  
 # Fetch the list of files with .jmx and .csv extensions from GitHub
-file_list=$(curl -s "${GITHUB_REPO}/tree/$Branch" | grep -Eo 'href="([^"#]+\.jmx|[^"#]+\.csv)"' | cut -d'"' -f2)
+file_list=$(curl -s "${GITHUB_REPO}/tree/${Branch}" | grep -Eo 'href="([^"#]+\.jmx|[^"#]+\.csv)"' | cut -d'"' -f2)
  
 # Display the list of files (optional)
 echo "Files to be uploaded:"
