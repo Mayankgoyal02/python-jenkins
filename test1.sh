@@ -50,12 +50,11 @@
 #!/bin/bash
  
 # Check if BRANCH is provided as a command-line argument
-if [ "$#" -lt 1 ]; then
-  echo "Usage: $0 <BRANCH>"
-  exit 1
+if [ -z "${BRANCH}" ]; then
+ echo "Error: BRANCH parameter is not set."
+ exit 1
 fi
  
-BRANCH="$1"
 TEST_ID='13758845'
  
 # GitHub repository details
@@ -77,13 +76,19 @@ echo "$file_list"
  
 # Upload files to BlazeMeter
 for file in $file_list; do
-  file_url="$RAW_BASE_URL$file"
-  filename=$(basename "$file")
+ file_url="$RAW_BASE_URL$file"
+ filename=$(basename "$file")
  
-  # Upload each file individually using the provided curl command structure
-  upload_response=$(curl -sk "$FILES_URL" \
-    -X POST \
-    -F "file=@$filename" \
-    --user "$USERNAME:$API_KEY"
-  )
+ # Upload each file individually using the provided curl command structure
+ upload_response=$(curl -sk "$FILES_URL" \
+  -X POST \
+  -F "file=@$filename" \
+  --user "$USERNAME:$API_KEY"
+ )
 done
+ 
+# Uncomment the following lines if you want to run the test immediately after uploading files
+# curl -sk "$RUN_TEST_URL" \
+# -X POST \
+# -H 'Content-Type: application/json' \
+# --user "$USERNAME:$API_KEY"
