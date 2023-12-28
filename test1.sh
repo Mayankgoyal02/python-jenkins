@@ -56,6 +56,7 @@ if [ -z "${BRANCH}" ]; then
 fi
  
 TEST_ID='13758845'
+echo $Branch
  
 # GitHub repository details
 GITHUB_REPO="https://github.com/Mayankgoyal02/python-jenkins"
