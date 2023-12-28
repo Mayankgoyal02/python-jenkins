@@ -1,12 +1,12 @@
 #!/bin/bash
 
 # Check if BRANCH_NAME is provided by Jenkins
-if [ -z ${Branch} ]; then
+if [ -z "${Branch}" ]; then
   echo "BRANCH not provided by Jenkins. Please select a branch."
   exit 1
 fi
 
-BRANCH= ${Branch}
+BRANCH= "${Branch}"
 TEST_ID='13758845'
 echo $BRANCH 
 # GitHub repository details
