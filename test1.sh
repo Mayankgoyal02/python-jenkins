@@ -6,7 +6,7 @@ if [ -z "${Branch}" ]; then
   exit 1
 fi
  
-BRANCH="$Branch"
+BRANCH="${Branch}"
 TEST_ID='13758845'
 echo $Branch
  
