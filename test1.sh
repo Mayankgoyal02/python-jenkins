@@ -2,7 +2,7 @@
 
 # Check if BRANCH_NAME is provided by Jenkins
 if [ -z "$BRANCH" ]; then
-  echo "BRANCH_NAME not provided by Jenkins. Please select a branch."
+  echo "BRANCH not provided by Jenkins. Please select a branch."
   exit 1
 fi
 
