@@ -86,6 +86,10 @@ for file in $file_list; do
     --user "$USERNAME:$API_KEY"
   )
 done
+
+echo "BRANCH: $BRANCH"
+echo "Files to be uploaded:"
+echo "$file_list"
  
 # Uncomment the following lines if you want to run the test immediately after uploading files
 # curl -sk "$RUN_TEST_URL" \
