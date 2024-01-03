@@ -8,11 +8,12 @@ BITBUCKET_ACCESS_TOKEN='NTI3OTkzNTYzOTQxOjz3y4JI9MERpV0OPebp3isLwxg2'
 API_ENDPOINT="${BITBUCKET_REPO}/rest/api/1.0/projects/PROJECT_KEY/repos/REPO_SLUG/browse/development/performance_test"
 
 # Fetch the list of files from Bitbucket
-file_list=$(curl -s --header "Authorization: Bearer $BITBUCKET_ACCESS_TOKEN" "$API_ENDPOINT?limit=1000" | jq -r '.values[].path')
+file_list=$(curl -s --header "Authorization: Bearer $BITBUCKET_ACCESS_TOKEN" "$API_ENDPOINT?limit=1000" | grep -oP '"path":.*?[^\\]",' | cut -d'"' -f4)
 
 # Display the list of files
 echo "Files in the repository:"
 echo "$file_list"
+
 
 
 #!/bin/bash
