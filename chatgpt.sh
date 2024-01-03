@@ -1,22 +1,22 @@
 #!/bin/bash
 
-TEST_ID='13758845'
+TEST_ID='13788085'
 
 # Bitbucket repository details
-BITBUCKET_REPO='https://bitbucket.org/your_username/your_repo.git'  # Replace with your Bitbucket repository URL
+BITBUCKET_REPO='https://bitbucket.corp.chartercom.com/scm/smt/mobile-it-devops-cicd.git'  # Replace with your Bitbucket repository URL
 RAW_BASE_URL="${BITBUCKET_REPO}/raw/development/performance_test/"
 
 # BlazeMeter API details
 FILES_URL="https://a.blazemeter.com/api/v4/tests/${TEST_ID}/files"
 RUN_TEST_URL="https://a.blazemeter.com/api/v4/tests/${TEST_ID}/start"
-USERNAME='ebf4a8d99d54eb292bcad9ce'
-API_KEY='8be234d747e4d099e67040d248764c3a9d747b1c6df4c5003b813b8403b5e6c6e511ae77'
+USERNAME='aea9b231534f434c2e1448bf'
+API_KEY='5006e34571c61320e68fe3a07fbe8fae31b0bb977ced85087e2bc1297c211035ae8a76ae'
 
 # Bitbucket access token
-BITBUCKET_ACCESS_TOKEN='your_bitbucket_access_token'
+BITBUCKET_ACCESS_TOKEN='NTI3OTkzNTYzOTQxOjz3y4JI9MERpV0OPebp3isLwxg2'
 
 # Fetch the list of files with .jmx and .csv extensions from Bitbucket
-file_list=$(curl -v --header "Authorization: Bearer $BITBUCKET_ACCESS_TOKEN" "$RAW_BASE_URL" | grep -Eo 'href="([^"#]+\.jmx|[^"#]+\.csv)"' | cut -d'"' -f2)
+file_list=$(curl -v -s --header "Authorization: Bearer $BITBUCKET_ACCESS_TOKEN" "$RAW_BASE_URL" | grep -Eo 'href="([^"#]+\.jmx|[^"#]+\.csv)"' | cut -d'"' -f2)
 
 # Display the list of files (optional)
 echo "Files to be uploaded:"
