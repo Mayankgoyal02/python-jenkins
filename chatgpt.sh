@@ -1,7 +1,28 @@
-response=$(GIT_CURL_VERBOSE=1 GIT_TRACE=1 git ls-remote --quiet -h "$RAW_BASE_URL" 2>&1)
+#!/bin/bash
 
+# Bitbucket repository details
+USERNAME="your_username"
+REPO_SLUG="your_repository_slug"
+BRANCH="main"  # Replace with the branch you are interested in
+BITBUCKET_ACCESS_TOKEN="your_bitbucket_access_token"
 
+# Bitbucket API endpoint for listing repository contents
+API_ENDPOINT="https://api.bitbucket.org/2.0/repositories/${USERNAME}/${REPO_SLUG}/src/${BRANCH}"
 
+# Make the API request to get the file names
+response=$(curl -s -H "Authorization: Bearer ${BITBUCKET_ACCESS_TOKEN}" "${API_ENDPOINT}")
+
+# Check if the request was successful (HTTP status code 200)
+if [[ "$(echo "$response" | grep -o '"type": "[^"]*"' | cut -d '"' -f4)" == "error" ]]; then
+    echo "Error: $(echo "$response" | grep -o '"message": "[^"]*"' | cut -d '"' -f4)"
+else
+    # Extract file names from the JSON response
+    file_names=$(echo "$response" | grep -o '"path": "[^"]*"' | cut -d '"' -f4)
+
+    # Print the file names
+    echo "Files in the repository:"
+    echo "$file_names"
+fi
 
 #!/bin/bash
 
