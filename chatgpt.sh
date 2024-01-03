@@ -1,27 +1,4 @@
-#!/bin/bash
-
-# Bitbucket repository details
-BITBUCKET_REPO='https://bitbucket.corp.chartercom.com/scm/smt/mobile-it-devops-cicd.git'  # Replace with your Bitbucket repository URL
-RAW_BASE_URL="${BITBUCKET_REPO}/raw/development/performance_test/"
-
-# Bitbucket access token
-BITBUCKET_ACCESS_TOKEN='NTI3OTkzNTYzOTQxOjz3y4JI9MERpV0OPebp3isLwxg2'
-
-# Fetch the content of the repository
-response=$(curl -i -s -H "Authorization: Bearer $BITBUCKET_ACCESS_TOKEN" "$RAW_BASE_URL")
-
-# Display the HTTP status code and response (for troubleshooting)
-http_status=$(echo "$response" | head -n 1 | awk '{print $2}')
-echo "HTTP Status Code: $http_status"
-echo "Response from Bitbucket:"
-echo "$response"
-
-# Extract and display file names (if HTTP status is 200 OK)
-if [ "$http_status" == "200" ]; then
-    file_list=$(echo "$response" | grep -oE 'href="([^"#]+\.jmx|[^"#]+\.csv)"' | cut -d'"' -f2)
-    echo "Files in the repository:"
-    echo "$file_list"
-fi
+response=$(GIT_CURL_VERBOSE=1 GIT_TRACE=1 git ls-remote --quiet -h "$RAW_BASE_URL" 2>&1)
 
 
 
