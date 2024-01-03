@@ -3,26 +3,25 @@
 # Bitbucket repository details
 USERNAME="your_username"
 REPO_SLUG="your_repository_slug"
-BRANCH="main"  # Replace with the branch you are interested in
+BRANCH="development"  # Replace with the branch you want to clone
 BITBUCKET_ACCESS_TOKEN="your_bitbucket_access_token"
 
-# Bitbucket API endpoint for listing repository contents
-API_ENDPOINT="https://api.bitbucket.org/2.0/repositories/${USERNAME}/${REPO_SLUG}/src/${BRANCH}"
+# Local directory to download the repository
+LOCAL_DIR="local_clone_directory"
 
-# Make the API request to get the file names
-response=$(curl -s -H "Authorization: Bearer ${BITBUCKET_ACCESS_TOKEN}" "${API_ENDPOINT}")
+# Clone the repository into the local directory
+git clone --branch "$BRANCH" "https://$USERNAME@bitbucket.org/$USERNAME/$REPO_SLUG.git" "$LOCAL_DIR"
 
-# Check if the request was successful (HTTP status code 200)
-if [[ "$(echo "$response" | grep -o '"type": "[^"]*"' | cut -d '"' -f4)" == "error" ]]; then
-    echo "Error: $(echo "$response" | grep -o '"message": "[^"]*"' | cut -d '"' -f4)"
-else
-    # Extract file names from the JSON response
-    file_names=$(echo "$response" | grep -o '"path": "[^"]*"' | cut -d '"' -f4)
+# Move into the cloned repository directory
+cd "$LOCAL_DIR"
 
-    # Print the file names
-    echo "Files in the repository:"
-    echo "$file_names"
-fi
+# Get the names of all files
+file_names=$(find . -type f)
+
+# Print the file names
+echo "Files in the repository:"
+echo "$file_names"
+
 
 #!/bin/bash
 
