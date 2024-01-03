@@ -1,27 +1,66 @@
-#!/bin/bash
-
-# Set your Bitbucket credentials and repository information
-USERNAME="your_username"
-REPO_SLUG="your_repository_slug"
-API_TOKEN="your_api_token"
-
-# Bitbucket API endpoint for listing repository contents
-API_ENDPOINT="https://api.bitbucket.org/2.0/repositories/$USERNAME/$REPO_SLUG/src"
-
-# Make the API request to get the file names
-response=$(curl -s -H "Authorization: Bearer $API_TOKEN" "$API_ENDPOINT")
-
-# Check if the request was successful (HTTP status code 200)
-if [[ "$(echo "$response" | grep -o '"type": "[^"]*"' | cut -d '"' -f4)" == "error" ]]; then
-    echo "Error: $(echo "$response" | grep -o '"message": "[^"]*"' | cut -d '"' -f4)"
-else
-    # Extract file names from the JSON response
-    file_names=$(echo "$response" | grep -o '"path": "[^"]*"' | cut -d '"' -f4)
-
-    # Print the file names
-    echo "Files in the repository:"
-    echo "$file_names"
-fi
+$ ./get-pf.sh
+*   Trying 142.136.245.35:443...
+* Connected to bitbucket.corp.chartercom.com (142.136.245.35) port 443 (#0)
+* ALPN: offers h2
+* ALPN: offers http/1.1
+} [5 bytes data]
+* [CONN-0-0][CF-SSL] TLSv1.3 (OUT), TLS handshake, Client hello (1):
+} [512 bytes data]
+* [CONN-0-0][CF-SSL] TLSv1.3 (IN), TLS handshake, Server hello (2):
+{ [91 bytes data]
+* [CONN-0-0][CF-SSL] TLSv1.2 (IN), TLS handshake, Certificate (11):
+{ [6221 bytes data]
+* [CONN-0-0][CF-SSL] TLSv1.2 (IN), TLS handshake, Server key exchange (12):
+{ [333 bytes data]
+* [CONN-0-0][CF-SSL] TLSv1.2 (IN), TLS handshake, Server finished (14):
+{ [4 bytes data]
+* [CONN-0-0][CF-SSL] TLSv1.2 (OUT), TLS handshake, Client key exchange (16):
+} [70 bytes data]
+* [CONN-0-0][CF-SSL] TLSv1.2 (OUT), TLS change cipher, Change cipher spec (1):
+} [1 bytes data]
+* [CONN-0-0][CF-SSL] TLSv1.2 (OUT), TLS handshake, Finished (20):
+} [16 bytes data]
+* [CONN-0-0][CF-SSL] TLSv1.2 (IN), TLS handshake, Finished (20):
+{ [16 bytes data]
+* SSL connection using TLSv1.2 / ECDHE-RSA-AES128-GCM-SHA256
+* ALPN: server did not agree on a protocol. Uses default.
+* Server certificate:
+*  subject: C=US; ST=Missouri; L=St. Louis; O=Charter Communications Operating, LLC; OU=IT Architecture; CN=bitbucket.corp.chartercom.com
+*  start date: Feb  2 18:59:16 2023 GMT
+*  expire date: Feb  1 18:59:16 2025 GMT
+*  issuer: DC=com; DC=chartercom; DC=corp; CN=Charter Communications Issuing CA1
+*  SSL certificate verify result: self signed certificate in certificate chain (19), continuing anyway.
+} [5 bytes data]
+> GET /scm/smt/mobile-it-devops-cicd.git/raw/development/performance_test/ HTTP/1.1
+> Host: bitbucket.corp.chartercom.com
+> User-Agent: curl/7.87.0
+> Accept: */*
+> Authorization: Bearer NTI3OTkzNTYzOTQxOjz3y4JI9MERpV0OPebp3isLwxg2
+>
+{ [5 bytes data]
+* Mark bundle as not supporting multiuse
+< HTTP/1.1 501
+< Date: Wed, 03 Jan 2024 11:32:12 GMT
+< Server: Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.2k-fips
+< X-AREQUESTID: *3ZQ4P8x692x3876288x3
+< X-AUSERID: 75026
+< X-AUSERNAME: P3214465
+< X-ASESSIONID: jwvu57
+< Cache-Control: private, no-cache
+< Pragma: no-cache
+< x-xss-protection: 1; mode=block
+< x-frame-options: SAMEORIGIN
+< x-content-type-options: nosniff
+< Set-Cookie: BITBUCKETSESSIONID=D041A87159A2DE6F1BEC891738D04F82; Max-Age=1209600; Expires=Wed, 17 Jan 2024 11:32:13 GMT; Path=/; Secure; HttpOnly
+< Connection: close
+< Transfer-Encoding: chunked
+<
+{ [5 bytes data]
+* Closing connection 0
+} [5 bytes data]
+* [CONN-0-0][CF-SSL] TLSv1.2 (OUT), TLS alert, close notify (256):
+} [2 bytes data]
+Files to be uploaded:
 
 
 #!/bin/bash
