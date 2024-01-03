@@ -1,19 +1,27 @@
 #!/bin/bash
 
-# Bitbucket repository details
-BITBUCKET_REPO='https://bitbucket.corp.chartercom.com/scm/smt/mobile-it-devops-cicd.git'  # Replace with your Bitbucket repository URL
-BITBUCKET_ACCESS_TOKEN='NTI3OTkzNTYzOTQxOjz3y4JI9MERpV0OPebp3isLwxg2'
+# Set your Bitbucket credentials and repository information
+USERNAME="your_username"
+REPO_SLUG="your_repository_slug"
+API_TOKEN="your_api_token"
 
-# API endpoint to list repository contents
-API_ENDPOINT="${BITBUCKET_REPO}/rest/api/1.0/projects/PROJECT_KEY/repos/REPO_SLUG/browse/development/performance_test"
+# Bitbucket API endpoint for listing repository contents
+API_ENDPOINT="https://api.bitbucket.org/2.0/repositories/$USERNAME/$REPO_SLUG/src"
 
-# Fetch the list of files from Bitbucket
-file_list=$(curl -s --header "Authorization: Bearer $BITBUCKET_ACCESS_TOKEN" "$API_ENDPOINT?limit=1000" | grep -oP '"path":.*?[^\\]",' | cut -d'"' -f4)
+# Make the API request to get the file names
+response=$(curl -s -H "Authorization: Bearer $API_TOKEN" "$API_ENDPOINT")
 
-# Display the list of files
-echo "Files in the repository:"
-echo "$file_list"
+# Check if the request was successful (HTTP status code 200)
+if [[ "$(echo "$response" | grep -o '"type": "[^"]*"' | cut -d '"' -f4)" == "error" ]]; then
+    echo "Error: $(echo "$response" | grep -o '"message": "[^"]*"' | cut -d '"' -f4)"
+else
+    # Extract file names from the JSON response
+    file_names=$(echo "$response" | grep -o '"path": "[^"]*"' | cut -d '"' -f4)
 
+    # Print the file names
+    echo "Files in the repository:"
+    echo "$file_names"
+fi
 
 
 #!/bin/bash
