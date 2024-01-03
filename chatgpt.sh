@@ -7,12 +7,22 @@ RAW_BASE_URL="${BITBUCKET_REPO}/raw/development/performance_test/"
 # Bitbucket access token
 BITBUCKET_ACCESS_TOKEN='NTI3OTkzNTYzOTQxOjz3y4JI9MERpV0OPebp3isLwxg2'
 
-# Fetch the list of files with .jmx and .csv extensions from Bitbucket
-file_list=$(curl -v -sk --header "Authorization: Bearer $BITBUCKET_ACCESS_TOKEN" "$RAW_BASE_URL" | grep -Eo 'href="([^"#]+\.jmx|[^"#]+\.csv)"' | cut -d'"' -f2)
+# Fetch the content of the repository
+response=$(curl -i -s -H "Authorization: Bearer $BITBUCKET_ACCESS_TOKEN" "$RAW_BASE_URL")
 
-# Display the list of files
-echo "Files in the repository:"
-echo "$file_list"
+# Display the HTTP status code and response (for troubleshooting)
+http_status=$(echo "$response" | head -n 1 | awk '{print $2}')
+echo "HTTP Status Code: $http_status"
+echo "Response from Bitbucket:"
+echo "$response"
+
+# Extract and display file names (if HTTP status is 200 OK)
+if [ "$http_status" == "200" ]; then
+    file_list=$(echo "$response" | grep -oE 'href="([^"#]+\.jmx|[^"#]+\.csv)"' | cut -d'"' -f2)
+    echo "Files in the repository:"
+    echo "$file_list"
+fi
+
 
 
 
