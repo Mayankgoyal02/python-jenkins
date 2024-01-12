@@ -32,53 +32,50 @@ API_KEY='5006e34571c61320e68fe3a07fbe8fae31b0bb977ced85087e2bc1297c211035ae8a76a
 
 # Display the list of files (optional)
 echo "Files to be uploaded:"
-echo "${SELECT_FILES}.jmx"
 
-# Search for usersDNU.csv in the target folder
+# JMX file
+JMX_FILE="${SELECT_FILES}.jmx"
+if [ -f "$JMX_FILE" ]; then
+    echo "Uploading $JMX_FILE..."
+    upload_response=$(curl -sk "$FILES_URL" \
+        -X POST \
+        -F "file=@$JMX_FILE" \
+        --user "$USERNAME:$API_KEY"
+    )
+
+    echo "$JMX_FILE uploaded successfully."
+else
+    echo "JMX file '$JMX_FILE' not found in folder '$TARGET_FOLDER'."
+    exit 1
+fi
+
+# usersDNU.csv file
 USER_DNU_FILE="usersDNU.csv"
 if [ -f "$USER_DNU_FILE" ]; then
-    echo "$USER_DNU_FILE"
+    echo "Uploading $USER_DNU_FILE..."
+    upload_response=$(curl -sk "$FILES_URL" \
+        -X POST \
+        -F "file=@$USER_DNU_FILE" \
+        --user "$USERNAME:$API_KEY"
+    )
+
+    echo "$USER_DNU_FILE uploaded successfully."
 else
     # Search for usersDNU.csv in the root directory
     cd ..
     if [ -f "$USER_DNU_FILE" ]; then
-        echo "$USER_DNU_FILE"
+        echo "Uploading $USER_DNU_FILE..."
+        upload_response=$(curl -sk "$FILES_URL" \
+            -X POST \
+            -F "file=@$USER_DNU_FILE" \
+            --user "$USERNAME:$API_KEY"
+        )
+
+        echo "$USER_DNU_FILE uploaded successfully."
     else
         echo "File '$USER_DNU_FILE' not found in the target or root directory."
         exit 1
     fi
-fi
-
-# Upload JMX file to BlazeMeter
-JMX_FILE="${SELECT_FILES}.jmx"
-upload_response=$(curl -sk "$FILES_URL" \
-    -X POST \
-    -H "Content-Type: application/xml" \
-    -F "file=@$JMX_FILE" \
-    --user "$USERNAME:$API_KEY"
-)
-
-# Check the response for JMX file upload
-if [[ "$upload_response" =~ "fileId" ]]; then
-    echo "JMX file uploaded successfully."
-else
-    echo "Failed to upload JMX file. Response: $upload_response"
-    exit 1
-fi
-
-# Upload usersDNU.csv to BlazeMeter
-upload_response=$(curl -sk "$FILES_URL" \
-    -X POST \
-    -F "file=@$USER_DNU_FILE" \
-    --user "$USERNAME:$API_KEY"
-)
-
-# Check the response for usersDNU.csv file upload
-if [[ "$upload_response" =~ "fileId" ]]; then
-    echo "usersDNU.csv file uploaded successfully."
-else
-    echo "Failed to upload usersDNU.csv file. Response: $upload_response"
-    exit 1
 fi
 
 # Uncomment the following lines if you want to run the test immediately after uploading files
