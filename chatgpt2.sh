@@ -25,13 +25,6 @@ fi
 
 cd "$TARGET_FOLDER" || exit 1
 
-# Check if the JMX file exists
-JMX_FILE="${SELECT_FILES}.jmx"
-if [ ! -f "$JMX_FILE" ]; then
-    echo "JMX file '$JMX_FILE' not found in folder '$TARGET_FOLDER'."
-    exit 1
-fi
-
 # BlazeMeter API details
 FILES_URL="https://a.blazemeter.com/api/v4/tests/${TEST_ID}/files"
 USERNAME='aea9b231534f434c2e1448bf'
@@ -39,18 +32,25 @@ API_KEY='5006e34571c61320e68fe3a07fbe8fae31b0bb977ced85087e2bc1297c211035ae8a76a
 
 # Display the list of files (optional)
 echo "Files to be uploaded:"
-echo "$JMX_FILE"
-echo "userDNU.csv"
+echo "${SELECT_FILES}.jmx"
+echo "usersDNU.csv"
 
-# Upload files to BlazeMeter
-for file in "$JMX_FILE" "userDNU.csv"; do
-    # Upload each file individually using the provided curl command structure
-    upload_response=$(curl -sk "$FILES_URL" \
-        -X POST \
-        -F "file=@$file" \
-        --user "$USERNAME:$API_KEY"
-    )
-done
+# Upload JMX file to BlazeMeter
+JMX_FILE="${SELECT_FILES}.jmx"
+upload_response=$(curl -sk "$FILES_URL" \
+    -X POST \
+    -H "Content-Type: application/xml" \
+    -F "file=@$JMX_FILE" \
+    --user "$USERNAME:$API_KEY"
+)
+
+# Upload usersDNU.csv to BlazeMeter
+USER_DNU_FILE="usersDNU.csv"
+upload_response=$(curl -sk "$FILES_URL" \
+    -X POST \
+    -F "file=@$USER_DNU_FILE" \
+    --user "$USERNAME:$API_KEY"
+)
 
 # Uncomment the following lines if you want to run the test immediately after uploading files
 # curl -sk "$RUN_TEST_URL" \
