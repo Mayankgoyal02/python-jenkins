@@ -33,11 +33,17 @@ API_KEY='5006e34571c61320e68fe3a07fbe8fae31b0bb977ced85087e2bc1297c211035ae8a76a
 # Display the list of files (optional)
 echo "Files to be uploaded:"
 
-
 # JMX file
 JMX_FILE="${SELECT_FILES}.jmx"
 if [ -f "$JMX_FILE" ]; then
-    # ... (previous code for uploading JMX file remains unchanged)
+    echo "Uploading $JMX_FILE..."
+    upload_response=$(curl -sk "$FILES_URL" \
+        -X POST \
+        -F "file=@$JMX_FILE" \
+        --user "$USERNAME:$API_KEY"
+    )
+
+    echo "$JMX_FILE uploaded successfully."
 
     # Check the JMX file name and find the corresponding second CSV file
     if [[ "$JMX_FILE" == "SpectrumMobile QA2_Telesales_Retail_PiNxt.jmx" ]]; then
@@ -60,7 +66,7 @@ if [ -f "$JMX_FILE" ]; then
 
         echo "$SECOND_CSV_FILE uploaded successfully."
     else
-        cd "$TARGET_FOLDER" || exit 1
+        cd ..
         if [ -f "$SECOND_CSV_FILE" ]; then
             echo "Uploading $SECOND_CSV_FILE..."
             upload_response=$(curl -sk "$FILES_URL" \
@@ -80,9 +86,6 @@ else
     echo "JMX file '$JMX_FILE' not found in folder '$TARGET_FOLDER'."
     exit 1
 fi
-
-# ... (remaining code for uploading usersDNU.csv remains unchanged)
-
 
 # usersDNU.csv file
 USER_DNU_FILE="usersDNU.csv"
@@ -112,9 +115,3 @@ else
         exit 1
     fi
 fi
-
-# Uncomment the following lines if you want to run the test immediately after uploading files
-# curl -sk "$RUN_TEST_URL" \
-# -X POST \
-# -H 'Content-Type: application/json' \
-# --user "$USERNAME:$API_KEY"
