@@ -7,7 +7,7 @@ if [ -z "${TEST_ID}" ]; then
 fi
 
 # Jenkins build parameters
-SELECT_FOLDER="${Select_Folder}"
+SELECT_FOLDER="${Select_Environment}"
 SELECT_FILES="${Select_Files}"
 
 # Check if build parameters are provided
