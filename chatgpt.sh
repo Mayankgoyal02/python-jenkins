@@ -118,16 +118,3 @@ fi
 # -X POST \
 # -H 'Content-Type: application/json' \
 # --user "$USERNAME:$API_KEY"
-# S02_ManageAccountsQA2MMR.csv
-# S02_SpectrumAccountNumber_Retail_QA2_Pinxt.csv
-# S02_SpectrumAccountNumber_Telesales_QA2_PiNxt.csv
-
-# SpectrumMobile QA2_BYOD_PiNxt.jmx
-
-# SpectrumMobile QA2_MANAGEACCOUNTS_PiNxt.jmx
-
-# SpectrumMobile QA2_Telesales_Retail_PiNxt.jmx
-
-# SpectrumMobile_QA2_NDEL_PiNxt.jmx
-
-# SpectrumMobile_QA2_Retail_ActivationFlow_PiNxt.jmx
