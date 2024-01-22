@@ -19,13 +19,30 @@ pipeline {
         stage('Select Folder') {
             steps {
                 script {
-                    // User input for folder
+                    def folders = sh(script: 'ls -d */', returnStdout: true).trim().readLines().collect { it.substring(0, it.length() - 1) }
+
+                    // Select a folder using the dropdown list
                     def selectedFolder = input(
                         id: 'folderInput',
-                        message: 'Enter folder:',
-                        parameters: [string(name: 'FOLDER', defaultValue: 'default-folder')]
+                        message: 'Select a folder:',
+                        parameters: [choice(choices: folders, description: 'Select folder', name: 'FOLDER', defaultValue: folders[0])]
                     )
                     echo "Selected Folder: ${selectedFolder}"
+                }
+            }
+        }
+        stage('Select Subfolder') {
+            steps {
+                script {
+                    def subfolders = sh(script: "ls -d ${params.FOLDER}/*/", returnStdout: true).trim().readLines().collect { it.substring(0, it.length() - 1) }
+
+                    // Select a subfolder using the dropdown list
+                    def selectedSubfolder = input(
+                        id: 'subfolderInput',
+                        message: 'Select a subfolder:',
+                        parameters: [choice(choices: subfolders, description: 'Select subfolder', name: 'SUBFOLDER', defaultValue: subfolders[0])]
+                    )
+                    echo "Selected Subfolder: ${selectedSubfolder}"
                 }
             }
         }
@@ -58,7 +75,7 @@ pipeline {
                     echo "Files to be uploaded:"
 
                     // Navigate to the specified subfolder
-                    def targetSubFolder = "${params.FOLDER}"
+                    def targetSubFolder = "${params.FOLDER}/${params.SUBFOLDER}"
                     if (targetSubFolder) {
                         dir(targetSubFolder) {
                             // Iterate through all .jmx and .csv files in the subfolder
