@@ -1,107 +1,72 @@
 pipeline {
     agent any
+
     stages {
         stage('Select source Branch') {
             steps {
                 script {
-                    def branches = sh(script: "git ls-remote --refs --tags --heads https://bitbucket.corp.com/mobile-it-cicd", returnStdout: true).trim().readLines().collect { it.replaceAll('.*refs/', '').trim() }
+                    GIT_URL="ssh://git@bitbucket.corp.chartercom.com:7999/smt/performancetestsuite.git"
 
-                    // Select a branch using the dropdown list
-                    def selectedBranch = input(
-                        id: 'branchInput',
-                        message: 'Select a branch:',
-                        parameters: [choice(choices: branches, description: 'Select branch', name: 'BRANCH', defaultValue: branches[0])]
-                    )
-                    echo "Selected Branch: ${selectedBranch}"
-                }
-            }
-        }
-        stage('Select Folder') {
-            steps {
-                script {
-                    def folders = sh(script: 'ls -d */', returnStdout: true).trim().readLines().collect { it.substring(0, it.length() - 1) }
+                    // Check if GIT_URL is set
+                    if (!GIT_URL) {
+                        error 'GIT_URL is not set. Aborting pipeline.'
+                    } 
 
-                    // Select a folder using the dropdown list
-                    def selectedFolder = input(
-                        id: 'folderInput',
-                        message: 'Select a folder:',
-                        parameters: [choice(choices: folders, description: 'Select folder', name: 'FOLDER', defaultValue: folders[0])]
-                    )
-                    echo "Selected Folder: ${selectedFolder}"
-                }
-            }
-        }
-        stage('Select Subfolder') {
-            steps {
-                script {
-                    def subfolders = sh(script: "ls -d ${params.FOLDER}/*/", returnStdout: true).trim().readLines().collect { it.substring(0, it.length() - 1) }
+                    // Configure Git credentials and remote URL
+                    def branchesResult = sh(script: "git ls-remote --refs --tags --heads ${GIT_URL}", returnStatus: true)
 
-                    // Select a subfolder using the dropdown list
-                    def selectedSubfolder = input(
-                        id: 'subfolderInput',
-                        message: 'Select a subfolder:',
-                        parameters: [choice(choices: subfolders, description: 'Select subfolder', name: 'SUBFOLDER', defaultValue: subfolders[0])]
-                    )
-                    echo "Selected Subfolder: ${selectedSubfolder}"
-                }
-            }
-        }
-        stage('Input BlazeMeter Test ID') {
-            steps {
-                script {
-                    // User input for BlazeMeter Test ID
-                    def userInputTestId = input(
-                        id: 'testIdInput',
-                        message: 'Please enter BlazeMeter Test ID:',
-                        parameters: [string(defaultValue: '', description: 'BlazeMeter Test ID', name: 'TEST_ID')]
-                    )
-                    // Check if user clicked "Abort"
-                    if (userInputTestId == null) {
-                        error 'Pipeline aborted by the user.'
-                    }
-                    env.TEST_ID = userInputTestId.trim()
-                }
-            }
-        }
-        stage('Run BlazeMeter Upload Script') {
-            steps {
-                script {
-                    // BlazeMeter API details
-                    def filesUrl = "https://a.blazemeter.com/api/v4/tests/${env.TEST_ID}/files"
-                    def username = 'aea9b231534f434c2e1448bf'
-                    def apiKey = '5006e34571c61320e68fe3a07fbe8fae31b0bb977ced85087e2bc1297c211035ae8a76ae'
+                    // Check if branchesResult is not zero (indicating success)
+                    if (branchesResult == 0) {
+                        def branches = sh(script: "git ls-remote --refs --tags --heads ${GIT_URL}", returnStdout: true).trim().readLines().collect { it.replaceAll('.*refs/', '').trim() }
 
-                    // Display the list of files (optional)
-                    echo "Files to be uploaded:"
+                        echo "Branches: ${branches}"
 
-                    // Navigate to the specified subfolder
-                    def targetSubFolder = "${params.FOLDER}/${params.SUBFOLDER}"
-                    if (targetSubFolder) {
-                        dir(targetSubFolder) {
-                            // Iterate through all .jmx and .csv files in the subfolder
-                            for (file in "*.jmx *.csv".split()) {
-                                if (file) {
-                                    echo "Uploading $file..."
-                                    def uploadResponse = sh(script: """
-                                        curl -sk "$filesUrl" \
-                                        -X POST \
-                                        -F "file=@$file" \
-                                        --user "$username:$apiKey"
-                                    """, returnStatus: true)
-
-                                    if (uploadResponse == 0) {
-                                        echo "$file uploaded successfully."
-                                    } else {
-                                        error "Failed to upload $file."
-                                    }
-                                }
-                            }
-                        }
+                        // Select a branch using radio buttons
+                        def source_branches = input(
+                            id: 'branchInput',
+                            message: 'Select a branch:',
+                            parameters: [choice(choices: branches, description: 'Select branch', name: 'BRANCH', defaultValue: branches[0])]
+                        )
+                        env.SOURCE_BRANCHES = source_branches 
+                        echo "Selected Branch: ${env.SOURCE_BRANCHES}"
                     } else {
-                        error "Subfolder not provided."
+                        error 'Failed to retrieve branches from the Git repository.'
                     }
                 }
             }
         }
+
+        stage('List Folders in Selected Branch') {
+            steps {
+                script {
+                    // Assume SOURCE_BRANCHES is the selected branch from the previous stage
+                    def selectedBranch = env.SOURCE_BRANCHES
+
+                    // Retrieve list of folders in the selected branch
+                    def foldersResult = sh(script: "git ls-tree --name-only -d -r ${selectedBranch}", returnStatus: true)
+
+                    // Check if foldersResult is zero (indicating success)
+                    if (foldersResult == 0) {
+                        def folders = sh(script: "git ls-tree --name-only -d -r ${selectedBranch}", returnStdout: true).trim().readLines()
+
+                        echo "Folders in ${selectedBranch}: ${folders}"
+
+                        // Select a folder using dropdown
+                        def selectedFolder = input(
+                            id: 'folderInput',
+                            message: 'Select a folder:',
+                            parameters: [choice(choices: folders, description: 'Select folder', name: 'FOLDER', defaultValue: folders[0])]
+                        )
+
+                        env.SELECTED_FOLDER = selectedFolder
+                        echo "Selected Folder: ${env.SELECTED_FOLDER}"
+                    } else {
+                        error 'Failed to retrieve folders from the Git repository.'
+                    }
+                }
+            }
+        }
+
+        // Add more stages or steps as needed for your pipeline
     }
 }
