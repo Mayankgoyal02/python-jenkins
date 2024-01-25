@@ -15,8 +15,8 @@ API_KEY='5006e34571c61320e68fe3a07fbe8fae31b0bb977ced85087e2bc1297c211035ae8a76a
 # Get the list of files
 response=$(curl -sk "${FILES_URL}" --user "$USERNAME:$API_KEY")
 
-# Use grep and awk to extract the names into an array
-names_array=($(echo "$response" | grep -o '"name": "[^"]*' | awk -F'"' '{print $4}'))
+# Extract names into an array, handling names with spaces
+IFS=$'\n' read -r -d '' -a names_array <<< "$(echo "$response" | grep -o '"name": "[^"]*' | cut -d'"' -f4)"
 
 # Check if there are files to delete
 if [ ${#names_array[@]} -eq 0 ]; then
@@ -57,42 +57,4 @@ fi
 
 cd "$TARGET_ENV_FOLDER" || exit 1
 
-# BlazeMeter API details for uploading files
-FILES_URL="https://a.blazemeter.com/api/v4/tests/${TEST_ID}/files"
-USERNAME='aea9b231534f434c2e1448bf'
-API_KEY='5006e34571c61320e68fe3a07fbe8fae31b0bb977ced85087e2bc1297c211035ae8a76ae'
-
-# Display the list of files (optional)
-echo "Files to be uploaded:"
-
-# Navigate to the specified subfolder
-TARGET_SUB_FOLDER="$SELECT_FOLDER"
-if [ ! -d "$TARGET_SUB_FOLDER" ]; then
-    echo "Subfolder '$TARGET_SUB_FOLDER' not found."
-    exit 1
-fi
-
-cd "$TARGET_SUB_FOLDER" || exit 1
-
-# Iterate through all .jmx and .csv files in the subfolder
-for FILE in *.jmx *.csv; do
-    if [ -f "$FILE" ]; then
-        echo "Uploading $FILE..."
-        upload_response=$(curl -sk "$FILES_URL" \
-            -X POST \
-            -F "file=@$FILE" \
-            --user "$USERNAME:$API_KEY"
-        )
-
-        echo "$FILE uploaded successfully."
-    else
-        echo "File '$FILE' not found in subfolder."
-        exit 1
-    fi
-done
-
-# Uncomment the following lines if you want to run the test immediately after uploading files
-# curl -sk "$RUN_TEST_URL" \
-# -X POST \
-# -H 'Content-Type: application/json' \
-# --user "$USERNAME:$API_KEY"
+# ... rest of the original script
